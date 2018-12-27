@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const GameSchema = new Schema({
   squares: { type: Array, required: true },
-  xIsNext: { type: Array, required: true },
+  xIsNext: { type: String, required: true },
 
 });
 

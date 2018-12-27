@@ -40,12 +40,21 @@ function Square(props) {
       this.state = {
         squares: Array(9).fill(null),
         xIsNext:'',
+        tasks:[],
+        _id:'',
        };
        this.addGame = this.addGame.bind(this);
 
    }
     
-      handleClick(i) {
+      
+   
+   
+   
+   
+   
+   
+   handleClick(i) {
       const squares = this.state.squares.slice();
       if (calculateWinner(squares) || squares[i]) {
         return;
@@ -63,37 +72,102 @@ function Square(props) {
                />
               );
     }
+
     addGame(e) {
-          fetch('/api/jugadas',{
-            method: 'POST',
-            body: JSON.stringify(this.state),
-            headers: {
-              'Accept':'application/json',
-              'Content-Type': 'application/json' 
-            } 
-          })
+        if(this.state._id){
+            fetch(`/api/jugadas/${this.state._id}`,{
+              method:'PUT',
+              body:JSON.stringify(this.state),
+              headers: {
+                'Accept':'application/json',
+                'Content-Type': 'application/json' 
+              } 
+            }) 
             .then(res => res.json())
             .then(data => {
-            M.toast({html:'task saved'})
-             this.setState({
-              squares: Array(9).fill(null),
-              xIsNext: false,
+          //  console.log(data);
+              M.toast({html:'task updated'});
+              this.setState({squares:'',id:'',xIsNext:true})
+              this.fetchGame();
+      
             });
-          })
-          .catch(err => console.log(err));
-        
-    
-        e.preventDefault();
+      
+          } else {
+            fetch('/api/jugadas',{
+              method: 'POST',
+              body: JSON.stringify(this.state),
+              headers: {
+                'Accept':'application/json',
+                'Content-Type': 'application/json' 
+              } 
+            })
+              .then(res => res.json())
+              .then(data => {
+             //   console.log(data);
+               M.toast({html:'task saved'})
+               this.setState({
+                squares: Array(9).fill(null),
+                xIsNext: false,
+              });
+             this.fetchGame();
+            })
+            .catch(err => console.log(err));
+          }
+      
+          e.preventDefault();
+          
      }
-     fecthGame(){
+
+     componentDidMount(){
+        this.fetchGame();
+      }
+
+     fetchGame(){
         fetch('/api/jugadas')
         .then(res => res.json())
         .then(data => {
           this.setState({tasks:data});
-       //   console.log(this.state.tasks);
+         console.log(this.state.tasks);
         });
       }
 
+      editGame(id){
+        fetch(`/api/jugadas/${id}`)
+        .then(res => res.json())
+        .then(data => {
+         if(data.xIsNext=='true'){
+          this.setState({
+            squares: data.squares,
+            xIsNext:data.xIsNext, 
+            _id:data._id,
+          })
+         }else{
+          this.setState({
+            squares: data.squares,
+            xIsNext:!data.xIsNext,
+            _id:data._id
+          })
+         }
+             });
+      }
+
+      deleteGame(id){
+        if (confirm('are you sure you want to delete it?')){
+         fetch(`/api/jugadas/${id}`, {
+           method:'DELETE',
+           headers: {
+           'Accept':'application/json',
+           'Content-Type': 'application/json' 
+           }
+         })
+         .then(res =>res.json())
+         .then(data => {
+             console.log(data)
+           M.toast({html:'Task Delete'});
+           this.fetchGame();
+         });
+       }
+        }
       
 
    render() {
@@ -107,8 +181,8 @@ function Square(props) {
       return (
         <div className="row">      
         <div className="juego col" style={styles.juego}>
-          <div className="status" style={{display:'block', position:'static'}}>{status}</div>
-          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
+          <div className="status" >{status}</div>
+          <div className="board" >
             {this.renderSquare(0)}
             {this.renderSquare(1)}
             {this.renderSquare(2)}
@@ -128,7 +202,7 @@ function Square(props) {
           </form>
   
         </div>
-       <div className="historia col">
+       <div className=" col">
        <table>
          <thead>
            <tr>
@@ -136,7 +210,23 @@ function Square(props) {
            </tr>
          </thead>
          <tbody>
-              
+         {
+                  this.state.tasks.map(task => {
+                    return (
+                      <tr key={task._id}>
+                        <td>{task.squares}</td>
+                        <td>
+                          <button className="btn light-blue darken-4" 
+                          onClick={() => this.editGame(task._id)}>
+                          <i className="material-icons">edit</i></button>
+                          <button className="btn light-blue darken-4" style={{margin :'4px'}} 
+                          onClick={() => this.deleteGame(task._id)}>
+                          <i className="material-icons">delete</i></button>
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
          </tbody>
        </table>
   

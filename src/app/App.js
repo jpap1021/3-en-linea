@@ -49,8 +49,7 @@ function Square(props) {
           })
             .then(res => res.json())
             .then(data => {
-           //   console.log(data);
-             M.toast({html:'task saved'})
+            M.toast({html:'task saved'})
              this.setState({
               squares: Array(9).fill(null),
               xIsNext: false,

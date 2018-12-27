@@ -20,8 +20,10 @@ const styles ={
         left: '35%',
         top: '20%'
         
-   }
-    
+   },
+    game:{
+        background:'#4682B4'
+    },
   
   }
 
@@ -46,14 +48,7 @@ function Square(props) {
        this.addGame = this.addGame.bind(this);
 
    }
-    
-      
-   
-   
-   
-   
-   
-   
+
    handleClick(i) {
       const squares = this.state.squares.slice();
       if (calculateWinner(squares) || squares[i]) {
@@ -64,6 +59,7 @@ function Square(props) {
         squares: squares,
         xIsNext: !this.state.xIsNext,   
       });
+    
     }
     
     renderSquare(i) {
@@ -89,6 +85,7 @@ function Square(props) {
               M.toast({html:'task updated'});
               this.setState({squares:'',id:'',xIsNext:true})
               this.fetchGame();
+              this.resetGame();
       
             });
       
@@ -168,6 +165,13 @@ function Square(props) {
          });
        }
         }
+        resetGame(){
+            this.setState({
+              squares: Array(9).fill(null),
+              xIsNext:'',
+              _id:''
+            });
+          }
       
 
    render() {
@@ -187,26 +191,30 @@ function Square(props) {
             {this.renderSquare(1)}
             {this.renderSquare(2)}
           </div>
-          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
+          <div className="board">
             {this.renderSquare(3)}
             {this.renderSquare(4)}
             {this.renderSquare(5)}
           </div>
-          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
+          <div className="board">
             {this.renderSquare(6)}
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
-          <form onSubmit={this.addGame}>
-          <button type="submit" className="btn light-blue darken-4">pausar </button>
+          <div className="row">
+          <form onSubmit={this.addGame} className="col">
+          <button type="submit" className="btn light-blue darken-4">Pausar </button>
           </form>
-  
+          <form onSubmit={this.resetGame} className="col">
+          <button type="submit" className="btn light-blue darken-4">Reset Game</button>
+          </form>
+          </div>
         </div>
        <div className=" col">
        <table>
          <thead>
            <tr>
-             <th>squares</th>
+             <th>Historial</th>
            </tr>
          </thead>
          <tbody>
@@ -217,8 +225,8 @@ function Square(props) {
                         <td>{task.squares}</td>
                         <td>
                           <button className="btn light-blue darken-4" 
-                          onClick={() => this.editGame(task._id)}>
-                          <i className="material-icons">edit</i></button>
+                          onClick={() => this.editGame(task._id)}> reanudar
+                          </button>
                           <button className="btn light-blue darken-4" style={{margin :'4px'}} 
                           onClick={() => this.deleteGame(task._id)}>
                           <i className="material-icons">delete</i></button>
@@ -239,8 +247,8 @@ function Square(props) {
   class Game extends Component {
     render() {
       return (
-        <div className="game">
-          <div className="game-board">
+        <div className="game" >
+          <div className="game-board" >
             <Board />
           </div>
           <div className="game-info">

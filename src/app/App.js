@@ -1,9 +1,34 @@
 import React, { Component } from 'react';
 
+const styles ={
+      square:{
+      background: '#fff',
+      border: '1px solid #999',
+      float: 'left',
+      fontSize: '100px',
+      fontWeight: 'bold',
+      lineeHight: '100px',
+      height: '120px',
+      marginRight: '-1px',
+      marginTop: '0px',
+      padding: '0',
+      textAlign: 'center',
+      width: '120px',
+   },
+    juego:{
+        position: 'absolute',
+        left: '35%',
+        top: '20%'
+        
+   }
+    
+  
+  }
+
 
 function Square(props) {
     return (
-     <button type ='submit' className='square' onClick={props.onClick}
+     <button type ='submit' className='square' block='true'  style={styles.square} onClick={props.onClick}
       > {props.value}
       </button>
     );
@@ -59,8 +84,17 @@ function Square(props) {
         
     
         e.preventDefault();
-        
+     }
+     fecthGame(){
+        fetch('/api/jugadas')
+        .then(res => res.json())
+        .then(data => {
+          this.setState({tasks:data});
+       //   console.log(this.state.tasks);
+        });
       }
+
+      
 
    render() {
      const winner = calculateWinner(this.state.squares);
@@ -71,41 +105,48 @@ function Square(props) {
         status = 'Next player: ' + (this.state.xIsNext ? 'O' : 'X');
         }      
       return (
-        <div className="row">
-         <div className="status" >{status}</div>
-          <div className="board" >
+        <div className="row">      
+        <div className="juego col" style={styles.juego}>
+          <div className="status" style={{display:'block', position:'static'}}>{status}</div>
+          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
             {this.renderSquare(0)}
             {this.renderSquare(1)}
             {this.renderSquare(2)}
           </div>
-          <div className="board" >
+          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
             {this.renderSquare(3)}
             {this.renderSquare(4)}
             {this.renderSquare(5)}
           </div>
-          <div className="board">
+          <div className="board" style={{clear: 'both', content: "", display: 'table'}}>
             {this.renderSquare(6)}
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
-          <form onSubmit ={this.addGame} >
-         <button type="submit" className="btn light-blue darken-4"> Pausar </button>
-        </form>
+          <form onSubmit={this.addGame}>
+          <button type="submit" className="btn light-blue darken-4">pausar </button>
+          </form>
+  
+        </div>
+       <div className="historia col">
+       <table>
+         <thead>
+           <tr>
+             <th>squares</th>
+           </tr>
+         </thead>
+         <tbody>
+              
+         </tbody>
+       </table>
+  
+       </div>
        </div>
       );
     }
   }
   
   class Game extends Component {
-       constructor(props) {
-      super(props);
-      this.state = {
-        history: [{
-          squares: Array(9).fill(null),
-        }],
-        xIsNext: true,
-      };
-    }
     render() {
       return (
         <div className="game">

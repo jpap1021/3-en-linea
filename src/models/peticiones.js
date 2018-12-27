@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const GameSchema = new Schema({
-  data: { type: String, required: true },
+  squares: { type: Array, required: true },
+  xIsNext: { type: Array, required: true },
 
 });
 

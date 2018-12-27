@@ -15,13 +15,12 @@ function Square(props) {
       this.state = {
         squares: Array(9).fill(null),
         xIsNext:'',
-  
-      };
-  
-    }
+       };
+       this.addGame = this.addGame.bind(this);
+
+   }
     
       handleClick(i) {
-      
       const squares = this.state.squares.slice();
       if (calculateWinner(squares) || squares[i]) {
         return;
@@ -29,12 +28,8 @@ function Square(props) {
       squares[i] = this.state.xIsNext ? 'O' : 'X'; 
        this.setState({
         squares: squares,
-        xIsNext: !this.state.xIsNext,
-        
+        xIsNext: !this.state.xIsNext,   
       });
-    
-   
-  
     }
     
     renderSquare(i) {
@@ -43,6 +38,31 @@ function Square(props) {
                />
               );
     }
+    addGame(e) {
+          fetch('/api/jugadas',{
+            method: 'POST',
+            body: JSON.stringify(this.state),
+            headers: {
+              'Accept':'application/json',
+              'Content-Type': 'application/json' 
+            } 
+          })
+            .then(res => res.json())
+            .then(data => {
+           //   console.log(data);
+             M.toast({html:'task saved'})
+             this.setState({
+              squares: Array(9).fill(null),
+              xIsNext: false,
+            });
+          })
+          .catch(err => console.log(err));
+        
+    
+        e.preventDefault();
+        
+      }
+
    render() {
      const winner = calculateWinner(this.state.squares);
       let status;
@@ -69,6 +89,9 @@ function Square(props) {
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
+          <form onSubmit ={this.addGame} >
+         <button type="submit" className="btn light-blue darken-4"> Pausar </button>
+        </form>
        </div>
       );
     }

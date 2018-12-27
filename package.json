@@ -1,0 +1,19 @@
+{
+  "name": "3-en-linea",
+  "version": "1.0.0",
+  "description": "triqui",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpap1021/3-en-linea.git"
+  },
+  "author": "jpap",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpap1021/3-en-linea/issues"
+  },
+  "homepage": "https://github.com/jpap1021/3-en-linea#readme"
+}

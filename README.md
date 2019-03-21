@@ -12,6 +12,5 @@ pasos para jugar:
 3. usa el comando npm start
 4. luego ve a http://localhost:4000/ .. listo
 
-le faltan algunos detalles del front, como algunos styles y que diga el empate, anuncia al ganador pero no lo guarda.
 
 buen juego.
